@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Sederhana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .calc-button {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            height: 60px;
+        }
+        
+        .calc-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .calc-button:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-animation {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-field {
+            height: 56px;
+            font-size: 18px;
+        }
+        
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .zero-result {
+            color: #10B981; /* Green color for zero result */
+        }
+        
+        .error-result {
+            color: #EF4444; /* Red color for error message */
+            font-size: 1rem; /* Smaller font for error message */
+            line-height: 1.4; /* Better line height for multi-line text */
+            padding-top: 5px;
+        }
+        
+        .result-display {
+            height: 120px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .result-text {
+            width: 100%;
+            text-align: center;
+            margin-top: 8px;
+            line-height: 1.2;
+            overflow: visible;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        
+        .result-label {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-12 w-full max-w-md">
+        <!-- Header (Tanpa Logo) -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gray-800">Kalkulator Sederhana</h1>
+        </div>
+
+        <!-- Input Fields -->
+        <div class="space-y-6 mb-8">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-3">Angka Pertama</label>
+                <input 
+                    type="number" 
+                    id="num1" 
+                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="Masukan angka Pertama"
+                    autocomplete="off"
+                    value=""
+                >
+            </div>
+            
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-3">Angka Kedua</label>
+                <input 
+                    type="number" 
+                    id="num2" 
+                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="Masukan angka Kedua"
+                    autocomplete="off"
+                    value=""
+                >
+            </div>
+        </div>
+
+        <!-- Operation Buttons (Navy Background - Icons Only) -->
+        <div class="flex gap-4 mb-8">
+            <button 
+                onclick="calculate('add')" 
+                class="calc-button flex-1 bg-gradient-to-r from-blue-900 to-indigo-900 text-white hover:from-blue-950 hover:to-indigo-950 font-semibold py-3 px-4 rounded-lg flex items-center justify-center"
+            >
+                <i class="fas fa-plus text-xl"></i>
+            </button>
+            
+            <button 
+                onclick="calculate('subtract')" 
+                class="calc-button flex-1 bg-gradient-to-r from-blue-900 to-indigo-900 text-white hover:from-blue-950 hover:to-indigo-950 font-semibold py-3 px-4 rounded-lg flex items-center justify-center"
+            >
+                <i class="fas fa-minus text-xl"></i>
+            </button>
+            
+            <button 
+                onclick="calculate('multiply')" 
+                class="calc-button flex-1 bg-gradient-to-r from-blue-900 to-indigo-900 text-white hover:from-blue-950 hover:to-indigo-950 font-semibold py-3 px-4 rounded-lg flex items-center justify-center"
+            >
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <button 
+                onclick="calculate('divide')" 
+                class="calc-button flex-1 bg-gradient-to-r from-blue-900 to-indigo-900 text-white hover:from-blue-950 hover:to-indigo-950 font-semibold py-3 px-4 rounded-lg flex items-center justify-center"
+            >
+                <i class="fas fa-divide text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Result Display (White Background) -->
+        <div id="resultContainer" class="mb-8">
+            <div class="bg-white result-display result-animation">
+                <p class="text-sm font-bold text-gray-600 result-label">Hasil:</p>
+                <p id="result" class="text-3xl font-bold zero-result result-text">0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get input elements
+        const num1Input = document.getElementById('num1');
+        const num2Input = document.getElementById('num2');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultElement = document.getElementById('result');
+
+        // Add input event listeners for real-time validation
+        num1Input.addEventListener('input', clearMessages);
+        num2Input.addEventListener('input', clearMessages);
+
+        function clearMessages() {
+            // Reset to default state
+            resultElement.textContent = '0';
+            resultElement.classList.add('zero-result');
+            resultElement.classList.remove('error-result');
+        }
+
+        function calculate(operation) {
+            const num1 = parseFloat(num1Input.value);
+            const num2 = parseFloat(num2Input.value);
+
+            // Validate inputs
+            if (num1Input.value.trim() === '' || num2Input.value.trim() === '') {
+                showError('input tidak valid. harap masukan angka yang benar');
+                return;
+            }
+
+            if (isNaN(num1) || isNaN(num2)) {
+                showError('input tidak valid. harap masukan angka yang benar');
+                return;
+            }
+
+            let result;
+            let operationSymbol;
+
+            switch(operation) {
+                case 'add':
+                    result = num1 + num2;
+                    operationSymbol = '+';
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    operationSymbol = '-';
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    operationSymbol = '×';
+                    break;
+                case 'divide':
+                    if (num2 === 0) {
+                        showError('Tidak bisa membagi dengan nol!');
+                        return;
+                    }
+                    result = num1 / num2;
+                    operationSymbol = '÷';
+                    break;
+            }
+
+            // Format result
+            const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
+            
+            // Display result
+            resultElement.textContent = formattedResult;
+            
+            // Change color based on result value
+            if (formattedResult == 0) {
+                resultElement.classList.add('zero-result');
+            } else {
+                resultElement.classList.remove('zero-result');
+            }
+            
+            // Remove error class if present
+            resultElement.classList.remove('error-result');
+
+            // Add animation
+            resultContainer.classList.remove('result-animation');
+            void resultContainer.offsetWidth; // Trigger reflow
+            resultContainer.classList.add('result-animation');
+        }
+
+        function showError(message) {
+            // Display error message in result area
+            resultElement.textContent = message;
+            resultElement.classList.remove('zero-result');
+            resultElement.classList.add('error-result');
+            
+            // Add animation
+            resultContainer.classList.remove('result-animation');
+            void resultContainer.offsetWidth; // Trigger reflow
+            resultContainer.classList.add('result-animation');
+        }
+    </script>
+</body>
+</html>
