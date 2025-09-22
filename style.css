@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.calc-button {
+    transition: all 0.3s ease;
+    transform: translateY(0);
+    height: 60px;
+}
+
+.calc-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.calc-button:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.result-animation {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.input-field {
+    height: 56px;
+    font-size: 18px;
+}
+
+.input-field:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.zero-result {
+    color: #10B981; /* Green color for zero result */
+}
+
+.error-result {
+    color: #EF4444; /* Red color for error message */
+    font-size: 1rem; /* Smaller font for error message */
+    line-height: 1.4; /* Better line height for multi-line text */
+    padding-top: 5px;
+}
+
+.result-display {
+    height: 120px;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-text {
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+    line-height: 1.2;
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.result-label {
+    margin-bottom: 5px;
+}
